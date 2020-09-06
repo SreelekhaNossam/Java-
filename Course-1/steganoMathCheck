@@ -1,0 +1,13 @@
+
+// Check the color values of Red
+
+var img=new SimpleImage(100,100);
+var pix=img.getPixel(0,0);
+for(var pix of img.values()){
+pix.setRed(170);
+}
+print(img);
+var r=pix.getRed();
+print(r);
+r=Math.floor(r/16)*16;
+print(r);
