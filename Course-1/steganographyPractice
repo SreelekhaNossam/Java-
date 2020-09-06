@@ -1,0 +1,68 @@
+// write your code here
+var start=new SimpleImage("smallpanda.png");
+var hide=new SimpleImage("smalluniverse.jpg");
+function crop(image,width,height){
+    var n=new SimpleImage(width,height);
+    for(var p of image.values()){
+        var x=p.getX();
+        var y=p.getY();
+        if (x < width && y < height){
+        var np = n.getPixel(x,y);
+        np.setRed(p.getRed());
+        np.setBlue(p.getBlue());
+        np.setGreen(p.getGreen()); 
+        }
+    }
+    return n;
+}
+var cropWidth = start.getWidth();
+var cropHeight = start.getHeight();
+var cropWidth1 = hide.getWidth();
+var cropHeight1 = hide.getHeight();
+var maxw=Math.max(cropWidth,cropWidth1);
+var maxh=Math.max(cropHeight,cropHeight1);
+cropWidth=maxw;
+cropWidth1=maxw;
+cropHeight=maxh;
+cropHeight1=maxh;
+start = crop(start,cropWidth, cropHeight);
+hide = crop(hide,cropWidth, cropHeight);
+function clearbits(pixval){
+    var x=Math.floor(pixval/16)*16;
+    return x;
+}
+function chop2hide(image){
+    for (var px of image.values()){
+        px.setRed(clearbits(px.getRed()));
+        px.setGreen(clearbits(px.getGreen()));
+        px.setBlue(clearbits(px.getBlue()));
+    }
+    return image;
+}
+//var y=image.getPixel(50,50);
+//print(y);
+function shift(image){
+    for (var px of image.values()){
+        px.setRed(px.getRed()/16);
+        px.setGreen(px.getGreen()/16);
+        px.setBlue(px.getBlue()/16);
+    }
+    return image;
+}
+function combine(show,hide){
+    var answer=new SimpleImage(show.getWidth(),show.getHeight());
+    for(var px of answer.values()){
+        var x=px.getX();
+        var y=px.getY();
+        var showPixel=show.getPixel(x,y);
+        var hidePixel=hide.getPixel(x,y);
+        px.setRed(showPixel.getRed()+hidePixel.getRed());
+        px.setGreen(showPixel.getGreen()+hidePixel.getGreen());
+        px.setBlue(showPixel.getBlue()+hidePixel.getBlue());
+    }
+    return answer;
+}
+start=chop2hide(start);
+hide=shift(hide);
+var stego=combine(start,hide);
+print(stego);
