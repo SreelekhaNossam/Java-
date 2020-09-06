@@ -1,0 +1,102 @@
+// Applying rainbow colors for an Image
+
+
+
+var image=new SimpleImage("smalllion.jpg");
+ w=image.getWidth();
+  h=image.getHeight();
+  for (var px of image.values()){
+    x=px.getX();
+    y=px.getY();
+    avg=(px.getRed()+px.getGreen()+px.getBlue())/3;
+    if (y<h/7){
+      if (avg<128){
+        px.setRed(2*avg);
+        px.setGreen(0);
+        px.setBlue(0);
+      }
+      else{
+        px.setRed(255);
+        px.setGreen((2*avg)-255);
+        px.setBlue((2*avg)-255);
+      }
+    }
+    else if ((y>=h/7)&&(y<(2*h)/7)){
+      if (avg<128){
+        px.setRed(2*avg);
+        px.setGreen(0.8*avg);
+        px.setBlue(0);
+      }
+      else{
+        px.setRed(255);
+        px.setGreen((1.2*avg)-51);
+        px.setBlue((2*avg)-255);
+      }
+    }
+    else if ((y>=(2*h)/7)&&((y<(3*h)/7))){
+      if (avg<128){
+        px.setRed(2*avg);
+        px.setGreen(2*avg);
+        px.setBlue(0);
+      }
+      else{
+        px.setRed(255);
+        px.setGreen(255);
+        px.setBlue((2*avg)-255);
+      }
+  }
+  else if ((y>=(3*h)/7)&&((y<(4*h)/7))){
+    if (avg<128){
+        px.setRed(0);
+        px.setGreen(2*avg);
+        px.setBlue(0);
+      }
+      else{
+        px.setRed((2*avg)-255);
+        px.setGreen(255);
+        px.setBlue((2*avg)-255);
+      }
+ }
+ else if((y>=(4*h)/7)&&((y<(5*h)/7))) {
+   if (avg<128){
+        px.setRed(0);
+        px.setGreen(0);
+        px.setBlue(2*avg);
+      }
+      else{
+        px.setRed((2*avg)-255);
+        px.setGreen((2*avg)-255);
+        px.setBlue(255);
+      }
+ }
+ else if((y>=(5*h)/7)&&((y<(6*h)/7))){
+   if (avg<128){
+        px.setRed(0.8*avg);
+        px.setGreen(0);
+        px.setBlue(2*avg);
+      }
+      else{
+        px.setRed((1.2*avg)-51);
+        px.setGreen((2*avg)-255);
+        px.setBlue(255);
+      }
+ }
+  else if ((y>=(6*h)/7)&&(y=h/7)){
+    if (avg<128){
+        px.setRed(1.6*avg);
+        px.setGreen(0);
+        px.setBlue(1.6*avg);
+      }
+      else{
+        px.setRed((0.4*avg)+153);
+        px.setGreen((2*avg)-255);
+        px.setBlue((0.4*avg)+153);
+      }
+  }
+  else{
+    px.setRed(255);
+    px.setGreen(0);
+    px.setBlue(0);
+  }
+  }
+print(image);
