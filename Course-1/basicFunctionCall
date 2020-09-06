@@ -1,0 +1,29 @@
+// Fucntion calling
+
+
+function adding(a,b){
+    sum=a+b;
+    return sum;
+}
+z=adding(5,3);
+print(z);
+
+function concat(s1,s2){
+    ret=s1+s2;
+    return ret;
+}
+sree=concat("Lekha","kumar");
+print(sree);
+
+
+function dimen(x,y){
+
+    return x;
+    return y;
+}
+var img=new SimpleImage("smalllion.jpg");
+print(img);
+sreee=dimen(img.getWidth());
+sree1=dimen(img.getHeight());
+print(sreee);
+print(sree1);
