@@ -1,0 +1,20 @@
+// Section Color Change for an image
+
+
+var img=new SimpleImage("smallpanda.png");
+print(img);
+w=img.getWidth();
+print(w);
+for (var pixel of img.values()){
+    a=pixel.getX();
+    if(a<(w/3)){
+        pixel.setRed(255);
+    }
+        if(a>=(w/3) && (a<=((2*w)/3))){
+        pixel.setGreen(255);
+    }
+    if(a>=((2*w)/3)){
+        pixel.setBlue(255);
+    }
+}
+print(img);
