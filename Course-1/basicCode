@@ -1,0 +1,29 @@
+// Inroduction to duke environment
+
+//Basic Coding
+var x=3;
+var y=4;
+var z=x**2+y;
+print("z:",z);
+
+var x=4;
+var y=7;
+y=x;
+print(y);
+print(x);
+
+
+var img= new SimpleImage("smallpanda.png");
+print(img.getWidth(),img.getHeight());
+print(img);
+print("Pixels=",img.getPixel(255,200));
+print("red=",img.getRed(123,123));
+print("Green=",img.getGreen(23,25));
+print("Blue=",img.getBlue(123,123));
+
+
+function square(x){
+    return x*x;
+}
+var y=square(5);
+print(y);
