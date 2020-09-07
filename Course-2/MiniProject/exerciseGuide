@@ -1,0 +1,205 @@
+/**
+ * Print out total number of babies born, as well as for each gender, in a given CSV file of baby name data.
+ * 
+ * @author Duke Software Team 
+ */
+import edu.duke.*;
+import org.apache.commons.csv.*;
+import java.io.*;
+public class BabyBirths {
+    public void printNames () {
+        FileResource fr = new FileResource();
+        for (CSVRecord rec : fr.getCSVParser(false)) {
+            int numBorn = Integer.parseInt(rec.get(2));
+            if (numBorn <= 100) {
+                System.out.println("Name " + rec.get(0) +
+                           " Gender " + rec.get(1) +
+                           " Num Born " + rec.get(2));
+            }
+        }
+    }
+
+    public void totalBirths (FileResource fr) {
+        int totalBirths = 0;
+        int totalBoys = 0;
+        int totalGirls = 0;
+        int girlCount=0;
+        int boyCount=0;
+        for (CSVRecord rec : fr.getCSVParser(false)) {
+            int numBorn = Integer.parseInt(rec.get(2));
+            totalBirths += numBorn;
+            if (rec.get(1).equals("M")) {
+                totalBoys += numBorn;
+                boyCount++; 
+            }
+            else {
+                totalGirls += numBorn;
+                girlCount++;
+            }
+            
+            System.out.println("total names = " + rec.get(0)); 
+            
+            }
+            System.out.println("Total Births = " + totalBirths);
+            System.out.println("Total Girls = " + totalGirls);
+            System.out.println("Total Boys = " + totalBoys);
+            System.out.println("boysNames Count = " + boyCount);
+            System.out.println("Girls Names Count = " +girlCount);
+            
+    }
+    public int getRank(int year, String name, String gender) {
+        int rank = 0;
+        int tempRank=0;
+        FileResource fr = new FileResource("us_babynames/us_babynames_by_year/yob" + year + ".csv");
+        CSVParser parser = fr.getCSVParser(false);
+    for(CSVRecord record : parser) {
+        String currName = record.get(0);
+        String currGender = record.get(1);
+        if(currGender.equals(gender)){
+            tempRank++;
+            if(currName.equals(name)) {
+            rank = tempRank;
+            }
+        }
+    }
+    if(rank==0){
+        rank=-1;
+    }
+    return rank;
+}
+    public String getName(int year,int rank,String gender){
+        String name="No Name";
+        int tempRank=0;
+        FileResource fr=new FileResource("us_babynames/us_babynames_by_year/yob" + year +".csv");
+        CSVParser parser=fr.getCSVParser(false);
+        for(CSVRecord rec:parser){
+            if(rec.get(1).equals(gender)){
+                tempRank++;
+                if(tempRank==rank){
+                    name=rec.get(0);
+                    break;
+                }
+            }
+        }
+        return name;
+    }
+    public int yearOfHighestRank(String name,String gender){
+        DirectoryResource dir = new DirectoryResource();
+        int year = 0;
+        int rank = 0;
+        // For every file the user selected
+        for (File f : dir.selectedFiles()) {
+            // Extract current year from file name
+            int currentYear = Integer.parseInt(f.getName().substring(3,7));
+            // Determine rank of name in current year
+            int currentRank = getRank(currentYear, name, gender);
+            System.out.println("Rank in year " + currentYear + ": " + currentRank);
+            // If current rank isn't invalid
+            if (currentRank != -1) {
+                // If on first file or if current rank is higher than saved rank
+                if (rank == 0 || currentRank < rank) {
+                    // Update tracker variables
+                    rank = currentRank;
+                    year = currentYear;
+                } 
+            }
+        }
+        
+        if (year == 0) {
+            return -1; 
+        }
+        return year;
+    }
+    public double getAvgRank(String name,String gender){
+        DirectoryResource dir = new DirectoryResource();
+        double totalRank = 0.0;
+        int count = 0;
+        for (File f : dir.selectedFiles()) {
+            // Extract current year from file name
+            int currentYear = Integer.parseInt(f.getName().substring(3,7));
+            // Determine rank of name in current year
+            int currentRank = getRank(currentYear, name, gender);
+            // Add rank to total and increment count
+            totalRank += currentRank;
+            count++;
+        }
+        // Return calculated average rank
+        if (totalRank == 0) {
+            return -1;
+        }
+        double average = totalRank/count;
+        return average;
+    }
+    public int getTotalBirthsRankedHigher(int year,String name,String gender){
+         int sumHigherNumBorn =0;
+        int numBorn=0;
+        int tempRank =0;
+        String fileName = "us_babynames/us_babynames_by_year/yob"+year+ ".csv";
+        FileResource fr = new FileResource(fileName);
+        CSVParser parser = fr.getCSVParser(false);
+        int inputRank = getRank(year,name,gender);
+        
+        for(CSVRecord record:parser)
+        {
+            if(record.get(1).equals(gender))
+            {
+                 tempRank +=1;
+                 if(tempRank < inputRank)
+                 {
+                    sumHigherNumBorn += Integer.parseInt(record.get(2));
+                 }
+            }
+            
+        }
+        return sumHigherNumBorn;   
+    }
+     public void testGetTotalBirthsRankedHigher() {
+        int year = 1990;
+        String name = "Drew";
+        String gender = "M";
+        int totalBirths = getTotalBirthsRankedHigher(year, name, gender);
+        System.out.println("Total number of births of those with the same gender who " +
+                            "are ranked higher than " + name + ", " + gender + " in " + year
+                            + ": " + totalBirths);
+    }
+    public void testGetAverageRank() {
+        String name = "Robert";
+        String gender = "M";
+        double avg = getAvgRank(name, gender);
+        System.out.println("Average rank of " + name + ", " + gender + ": " + avg);
+    }
+    
+    public void testYearOfHighestRank(){
+        String name="Mich";
+        String gender="M";
+        int year=yearOfHighestRank(name, gender);
+        System.out.println("The year with the highest rank for " + name + " (gender " + gender
+                            + ") is " + year);
+    }
+    public void whatIsNameInYear(String name, int year,int newYear,String gender){
+        int tempRank=0;
+        String orgName=name;
+        int orgYear=year;
+        int rankResult=getRank(orgYear,orgName,gender);
+        String newName=getName(newYear,rankResult,gender);
+        System.out.println(orgName + " born in "+ orgYear +" would be "+ newName+ " if she was born in "+newYear);
+    }
+    public void testWhatIsName(){
+        whatIsNameInYear("Owen",1974,2014,"M");
+    }
+    public void testGetName(){
+        String name=getName(1982,450,"M");
+        System.out.println(name);
+    }
+    public void testGetRank(){
+        
+        String name="Frank";
+        long rank=getRank(1971,"Frank","M");
+        System.out.println(name+" rank is "+ rank);
+    }
+    public void testTotalBirths () {
+        //FileResource fr = new FileResource();
+        FileResource fr = new FileResource();
+        totalBirths(fr);
+    }
+}
